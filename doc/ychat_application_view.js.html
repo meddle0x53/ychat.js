@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>JSDoc: Source: ychat_namespace.js</title>
+    <title>JSDoc: Source: ychat_application_view.js</title>
     
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -17,7 +17,7 @@
 
 <div id="main">
     
-    <h1 class="page-title">Source: ychat_namespace.js</h1>
+    <h1 class="page-title">Source: ychat_application_view.js</h1>
     
     
 
@@ -26,14 +26,39 @@
     <section>
         <article>
             <pre class="prettyprint source"><code>/**
- * The main namespace of the YChat plugin.
+ * Represents the main view of application, the one that contains the contact list
+ * and is used to open all other views.
  *
- * @namespace YChat
- * @author meddle0x53
+ * @constructor
+ * @augments YChat.Container
+ *
+ * @param {object} parentElement {@link YChat.Container}
+ * @param {object} options {@link YChat.Container}
  */
-var YChat = {};
+YChat.ApplicationView = function (parentElement, options) {
+  YChat.Container.call(this, parentElement, $.extend({}, YChat.ApplicationView.Defaults, options));
+};
 
-YChat.Name = 'ychat';
+YChat.ApplicationView.prototype = new YChat.Container();
+YChat.ApplicationView.constructor = YChat.ApplicationView;
+
+/**
+ * Initializes the view.
+ * Creates the html of an application view using the options passed to the constructor.
+ * Maintains a list of contacts and user options
+ *
+ * @see YChat.Container#init
+ */
+YChat.ApplicationView.prototype.init = function () {
+  YChat.Container.prototype.init.call(this);
+
+  if (!this.$windowInnerContent.html()) {
+    $('&lt;div/>').addClass(YChat.Container.LoadingCssClassName).appendTo(this.$windowInnerContent);
+  }
+
+  this.$window.addClass(YChat.ApplicationView.CssClassName);
+};
+
 </code></pre>
         </article>
     </section>

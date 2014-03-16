@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>JSDoc: Class: Container</title>
+    <title>JSDoc: Class: ApplicationView</title>
     
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -17,7 +17,7 @@
 
 <div id="main">
     
-    <h1 class="page-title">Class: Container</h1>
+    <h1 class="page-title">Class: ApplicationView</h1>
     
     
 
@@ -29,7 +29,7 @@
     <h2>
         <span class="ancestors"><a href="YChat.html">YChat</a>.</span>
     
-    Container
+    ApplicationView
     </h2>
     
 </header>  
@@ -41,7 +41,7 @@
     
         
 <dt>
-    <h4 class="name" id="Container"><span class="type-signature"></span>new Container<span class="signature">(parentElement, options)</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="ApplicationView"><span class="type-signature"></span>new ApplicationView<span class="signature">(parentElement, options)</span><span class="type-signature"></span></h4>
     
     
 </dt>
@@ -49,9 +49,8 @@
     
     
     <div class="description">
-        Creates a new YChat.Container.
-YChat container manages the html for a chat window's content.
-Think of the YChat.Container as the base class of all the views of the plugin
+        Represents the main view of application, the one that contains the contact list
+and is used to open all other views.
     </div>
     
 
@@ -101,8 +100,7 @@ Think of the YChat.Container as the base class of all the views of the plugin
             
             
             
-            <td class="description last">The element to ehich this chat container should be appended.
-   Can be null for containers that should be appended to the body DOM element.</td>
+            <td class="description last"><a href="YChat.Container.html">YChat.Container</a></td>
         </tr>
 	
 	
@@ -125,23 +123,7 @@ Think of the YChat.Container as the base class of all the views of the plugin
             
             
             
-            <td class="description last">Options for this container.
-   These options overide the YChat.containerDefaults.
-   <p>
-     Available options:
-     <ul>
-       <li>
-         title - The title of the container,
-         for exampe the name of the person in this chat.
-       </li>
-       <li>
-         canClose - If the container should have close button.
-       </li>
-       <li>
-         initialState - The initial state of this container - maxinized or minimized.
-       </li>
-     </ul>
-   </p></td>
+            <td class="description last"><a href="YChat.Container.html">YChat.Container</a></td>
         </tr>
 	
 	
@@ -172,7 +154,7 @@ Think of the YChat.Container as the base class of all the views of the plugin
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="ychat_container.js.html">ychat_container.js</a>, <a href="ychat_container.js.html#line30">line 30</a>
+        <a href="ychat_application_view.js.html">ychat_application_view.js</a>, <a href="ychat_application_view.js.html#line11">line 11</a>
     </li></ul></dd>
     
     
@@ -200,6 +182,12 @@ Think of the YChat.Container as the base class of all the views of the plugin
     
     </div>
     
+    
+        <h3 class="subsection-title">Extends</h3>
+        
+        <ul>
+            <li><a href="YChat.Container.html">YChat.Container</a></li>
+        </ul>
     
     
     
@@ -216,60 +204,6 @@ Think of the YChat.Container as the base class of all the views of the plugin
         <dl>
             
 <dt>
-    <h4 class="name" id="ContentCssClassName"><span class="type-signature">&lt;static, constant> </span>ContentCssClassName<span class="type-signature"></span></h4>
-    
-    
-</dt>
-<dd>
-    
-    <div class="description">
-        The CSS class name of the content element of the container's html.
-    </div>
-    
-    
-    
-
-    
-<dl class="details">
-    
-        
-    
-    
-    
-
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="ychat_constants.js.html">ychat_constants.js</a>, <a href="ychat_constants.js.html#line20">line 20</a>
-    </li></ul></dd>
-    
-    
-    
-    
-    
-    
-    
-</dl>
-
-    
-    
-</dd>
-
-        
-            
-<dt>
     <h4 class="name" id="CssClassName"><span class="type-signature">&lt;static, constant> </span>CssClassName<span class="type-signature"></span></h4>
     
     
@@ -277,7 +211,7 @@ Think of the YChat.Container as the base class of all the views of the plugin
 <dd>
     
     <div class="description">
-        The CSS class name of the container html element.
+        The CSS class name of the application's main view.
     </div>
     
     
@@ -306,7 +240,7 @@ Think of the YChat.Container as the base class of all the views of the plugin
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="ychat_constants.js.html">ychat_constants.js</a>, <a href="ychat_constants.js.html#line6">line 6</a>
+        <a href="ychat_constants.js.html">ychat_constants.js</a>, <a href="ychat_constants.js.html#line114">line 114</a>
     </li></ul></dd>
     
     
@@ -331,7 +265,7 @@ Think of the YChat.Container as the base class of all the views of the plugin
 <dd>
     
     <div class="description">
-        Default properties for the container views.
+        Default options for the <a href="YChat.ApplicationView.html">YChat.ApplicationView</a>.
     </div>
     
     
@@ -360,286 +294,7 @@ Think of the YChat.Container as the base class of all the views of the plugin
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="ychat_constants.js.html">ychat_constants.js</a>, <a href="ychat_constants.js.html#line58">line 58</a>
-    </li></ul></dd>
-    
-    
-    
-    
-    
-    
-    
-    <dt class="tag-todo">To Do:</dt>
-    <dd class="tag-todo">
-        <ul>
-            <li>All the on* methods should be removed and instead of them we should us event handlers.</li>
-        
-            <li>The uiDecorator is not needed if there are events!</li>
-        </ul>
-    </dd>
-    
-</dl>
-
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <h4 class="name" id="InnerContentCssClassName"><span class="type-signature">&lt;static, constant> </span>InnerContentCssClassName<span class="type-signature"></span></h4>
-    
-    
-</dt>
-<dd>
-    
-    <div class="description">
-        The CSS class anme of the main content of the container's html.
-    </div>
-    
-    
-    
-
-    
-<dl class="details">
-    
-        
-    
-    
-    
-
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="ychat_constants.js.html">ychat_constants.js</a>, <a href="ychat_constants.js.html#line27">line 27</a>
-    </li></ul></dd>
-    
-    
-    
-    
-    
-    
-    
-</dl>
-
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <h4 class="name" id="LoadingCssClassName"><span class="type-signature">&lt;static, constant> </span>LoadingCssClassName<span class="type-signature"></span></h4>
-    
-    
-</dt>
-<dd>
-    
-    <div class="description">
-        The CSS class name of loading annimation widget.
-    </div>
-    
-    
-    
-
-    
-<dl class="details">
-    
-        
-    
-    
-    
-
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="ychat_constants.js.html">ychat_constants.js</a>, <a href="ychat_constants.js.html#line34">line 34</a>
-    </li></ul></dd>
-    
-    
-    
-    
-    
-    
-    
-</dl>
-
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <h4 class="name" id="StateMaximized"><span class="type-signature">&lt;static, constant> </span>StateMaximized<span class="type-signature"></span></h4>
-    
-    
-</dt>
-<dd>
-    
-    <div class="description">
-        The name of the maximized state of the container.
-    </div>
-    
-    
-    
-
-    
-<dl class="details">
-    
-        
-    
-    
-    
-
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="ychat_constants.js.html">ychat_constants.js</a>, <a href="ychat_constants.js.html#line48">line 48</a>
-    </li></ul></dd>
-    
-    
-    
-    
-    
-    
-    
-</dl>
-
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <h4 class="name" id="StateMinimized"><span class="type-signature">&lt;static, constant> </span>StateMinimized<span class="type-signature"></span></h4>
-    
-    
-</dt>
-<dd>
-    
-    <div class="description">
-        The name of the minimized state of the container.
-    </div>
-    
-    
-    
-
-    
-<dl class="details">
-    
-        
-    
-    
-    
-
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="ychat_constants.js.html">ychat_constants.js</a>, <a href="ychat_constants.js.html#line41">line 41</a>
-    </li></ul></dd>
-    
-    
-    
-    
-    
-    
-    
-</dl>
-
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <h4 class="name" id="TitleCssClassName"><span class="type-signature">&lt;static, constant> </span>TitleCssClassName<span class="type-signature"></span></h4>
-    
-    
-</dt>
-<dd>
-    
-    <div class="description">
-        The CSS class name of the title bar of the container's html.
-    </div>
-    
-    
-    
-
-    
-<dl class="details">
-    
-        
-    
-    
-    
-
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="ychat_constants.js.html">ychat_constants.js</a>, <a href="ychat_constants.js.html#line13">line 13</a>
+        <a href="ychat_constants.js.html">ychat_constants.js</a>, <a href="ychat_constants.js.html#line121">line 121</a>
     </li></ul></dd>
     
     
@@ -689,6 +344,11 @@ Think of the YChat.Container as the base class of all the views of the plugin
     
     
 
+    
+    <dt class="inherited-from">Inherited From:</dt>
+    <dd class="inherited-from"><ul class="dummy"><li>
+        <a href="YChat.Container.html#getContent">YChat.Container#getContent</a>
+    </li></dd>
     
     
     
@@ -781,6 +441,11 @@ Think of the YChat.Container as the base class of all the views of the plugin
     
 
     
+    <dt class="inherited-from">Inherited From:</dt>
+    <dd class="inherited-from"><ul class="dummy"><li>
+        <a href="YChat.Container.html#getState">YChat.Container#getState</a>
+    </li></dd>
+    
     
     
     
@@ -860,6 +525,11 @@ Think of the YChat.Container as the base class of all the views of the plugin
     
 
     
+    <dt class="inherited-from">Inherited From:</dt>
+    <dd class="inherited-from"><ul class="dummy"><li>
+        <a href="YChat.Container.html#getTitle">YChat.Container#getTitle</a>
+    </li></dd>
+    
     
     
     
@@ -932,10 +602,9 @@ Think of the YChat.Container as the base class of all the views of the plugin
     
     
     <div class="description">
-        Initializes the container.
-Creates the html of a container view using the options passed to the constructor.
-Adds this container to the list with active containers.
-A container consists of a main part and a title bar.
+        Initializes the view.
+Creates the html of an application view using the options passed to the constructor.
+Maintains a list of contacts and user options
     </div>
     
 
@@ -968,12 +637,19 @@ A container consists of a main part and a title bar.
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="ychat_container.js.html">ychat_container.js</a>, <a href="ychat_container.js.html#line49">line 49</a>
+        <a href="ychat_application_view.js.html">ychat_application_view.js</a>, <a href="ychat_application_view.js.html#line25">line 25</a>
     </li></ul></dd>
     
     
     
     
+    
+    <dt class="tag-see">See:</dt>
+    <dd class="tag-see">
+        <ul>
+            <li><a href="YChat.Container.html#init">YChat.Container#init</a></li>
+        </ul>
+    </dd>
     
     
     
@@ -1070,6 +746,11 @@ A container consists of a main part and a title bar.
     
     
 
+    
+    <dt class="inherited-from">Inherited From:</dt>
+    <dd class="inherited-from"><ul class="dummy"><li>
+        <a href="YChat.Container.html#setState">YChat.Container#setState</a>
+    </li></dd>
     
     
     
@@ -1197,6 +878,11 @@ A container consists of a main part and a title bar.
     
 
     
+    <dt class="inherited-from">Inherited From:</dt>
+    <dd class="inherited-from"><ul class="dummy"><li>
+        <a href="YChat.Container.html#setTitle">YChat.Container#setTitle</a>
+    </li></dd>
+    
     
     
     
@@ -1313,6 +999,11 @@ A container consists of a main part and a title bar.
     
     
 
+    
+    <dt class="inherited-from">Inherited From:</dt>
+    <dd class="inherited-from"><ul class="dummy"><li>
+        <a href="YChat.Container.html#setVisible">YChat.Container#setVisible</a>
+    </li></dd>
     
     
     

@@ -4,7 +4,7 @@ module.exports = function(karma) {
     frameworks: ['jasmine'],
 
     files: [
-      'bower_components/jquery/jquery.min.js',
+      'bower_components/jquery/dist/jquery.min.js',
       'src/js/ychat_namespace.js',
       'src/js/ychat_cookies.js',
       'src/js/ychat_container.js',
