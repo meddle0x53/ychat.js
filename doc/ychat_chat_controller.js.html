@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: ychat_chat_controller.js</title>
+    
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+    
+    <h1 class="page-title">Source: ychat_chat_controller.js</h1>
+    
+    
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source"><code>/**
+ * Creates a new YChat.ChatController.
+ * The ChatController manages the lifecyvle of a ChatContainer (its view),
+ * it makes posting new messages and receiving messsages available for it.
+ * This controller connects the view to the model (users and messages).
+ *
+ * @todo Lint!!!
+ *
+ * @constructor
+ * @this {YChat.ChatController}
+ * @param {object} options
+ *    Options used to initialize the controller.
+ */
+YChat.ChatController = function (options) {
+  this.opts = $.extend({}, YChat.ChatController.Defaults, options);
+  this.chatContainer = null;
+
+  if (this.opts.chat) {
+    this.$applicationEl = this.opts.chat.$el; 
+  } else {
+    this.$applicationEl = $('body');
+  }
+};
+
+/**
+ * Initializes the ChatController.
+ * Uses the options passed when this controller was created
+ * to create a {@link YChat.ChatContainer} view associated with it.
+ * Wires the text field from the view to send messages on submit,
+ * loads the right message history in it and sets titles and logic
+ * for marking messages as read.
+ *
+ * @todo Document the events fired from the init method when implemented.
+ */
+YChat.ChatController.prototype.init = function () {
+  var _this = this, title, userId = this.opts.otherUser.id;
+
+  if (this.opts.userToName) {
+    title = this.opts.userToName;
+  } else if (this.opts.otherUser && this.opts.otherUser.name) {
+    title = this.opts.otherUser.name;
+  } else {
+    title = YChat.Container.Defaults.title;
+  }
+
+  this.chatContainer = YChat.methods.createChatContainer.call(this.$applicationEl, {
+    title: title,
+    canClose: true,
+    initialState: this.opts.initialState,
+    uiDecorator: this.opts.uiDecorator,
+    onClose: function (e) {
+      _this.opts.onClose(e);
+    },
+    onToggleStateChanged: function (toggleState) {
+      _this.opts.onToggleStateChanged(toggleState);
+    }
+  });
+
+  // TODO This callback can be instance method.
+  this.chatContainer.$textBox.keypress(function (e) {
+    if (_this.$sendTypingSignalTimeout === undefined) {
+      _this.$sendTypingSignalTimeout = setTimeout(function () {
+        _this.$sendTypingSignalTimeout = undefined;
+      }, 3000);
+
+      _this.sendTypingSignal();
+    }
+
+    if (e.which === 13 && e.shiftKey !== true) {
+      e.preventDefault();
+      if ($(this).val()) {
+        _this.sendMessage($(this).val());
+        $(this).val('');
+      }
+    }
+  });
+
+  // TODO This callbacks can be instance method.
+  // TODO Test when there is event for reading.
+  this.chatContainer.$textBox.on('focus.' + YChat.Name + 'ChatTextField', function () {
+    var $userElement, $userUnreadElement;
+
+    _this.opts.adapter.server.readChatMessages(userId, function () {
+      _this.chatContainer.$windowTitle.removeClass('unread');
+
+      $userElement = _this.opts.chat.chatContainer
+        .getContent().find('.user-list-item[data-val-id="' + userId + '"]');
+      $userUnreadElement = $userElement.find('.profile-unread');
+      if ($userUnreadElement.hasClass('has-unread')) {
+        _this.opts.chat.usersById[userId].unreadMessagesNumber = 0;
+        _this.opts.chat.client.usersListChanged(_this.opts.chat.usersList);
+      }
+    });
+  });
+
+  this.opts.adapter.server.getMessageHistory(userId, $.proxy(this.showMessageHistory, this));
+
+  this.setOnlineStatus(this.opts.userIsOnline);
+};
+
+/**
+ * Makes the view display a message history.
+ * This function will must be called with the 
+ * list of messages retrieved from the server.
+ *
+ * @param {array} messageHistory
+ *    An array model containing the message history of this chat.
+ */
+YChat.ChatController.prototype.showMessageHistory = function (messageHistory) {
+  var i;
+
+  // TODO Fire event for before showing history.
+  if (messageHistory.length > 0) {
+    this.addHeader(messageHistory);
+  }
+
+  for (i = messageHistory.length - 1; i >= 0; i--) {
+    this.addMessage(messageHistory[i]);
+  }
+
+  this.chatContainer.setVisible(true);
+  if (this.opts.initialFocusState === 'focused') {
+    this.chatContainer.focus();
+  }
+  this.chatContainer.scrollToBottom();
+
+  // TODO Event with better name.
+  if (this.opts.uiDecorator && this.opts.uiDecorator.onCreateChatWindow) {
+    this.opts.uiDecorator.onCreateChatWindow(this);
+  }
+
+  // TODO Event!
+  if (this.opts.onReady) {
+    this.opts.onReady(this);
+  }
+};
+
+/**
+ * Adds a new message to a chat container.
+ * If the message is already in it, this method can update it with status.
+ * This method processes the content of the message.
+ *
+ * @param {object} message
+ *    The message to add/update.
+ * @param {string} clientGuid
+ *    Uniq id that can be used to check if the message is already added in the container.
+ * @todo This clientGuid has bad name and see its generation process!
+ * @todo Document the message object!
+ */
+YChat.ChatController.prototype.addMessage = function (message, clientGuid) {
+  var messageUserFrom,
+      $tmpMessageEl, $messageEl, $lastMessage,
+      $chatMessage, $gravatarWrapper, $textWrapper;
+
+  // TODO Remove uiDecorator related stuff! This should be in what?
+  if (this.opts.uiDecorator && this.opts.uiDecorator.beforeAddMessage) {
+    this.opts.uiDecorator.beforeAddMessage(message);
+  }
+
+  this.chatContainer.setState(YChat.Container.StateMaximized);
+
+  if (message.fromId !== this.opts.myUser.id) {
+    this.removeTypingSignal();
+  }
+
+  // TODO View related code should be in the view! Test it for the view!
+  // TODO message.ClientGuid should be renamed to something better!
+  if (message.ClientGuid && $('p[data-val-client-guid="' + message.ClientGuid + '"]').length) {
+    $tmpMessageEl = $('p[data-val-client-guid="' + message.ClientGuid + '"]');
+    $tmpMessageEl.removeClass('temp-message').removeAttr('data-val-client-guid');
+    if (this.opts.uiDecorator && this.opts.uiDecorator.contentHtml) {
+      $tmpMessageEl.html(message.content);
+    }
+  } else {
+    // TODO Another type of decorating the content - content processor
+    if (this.opts.uiDecorator && this.opts.uiDecorator.contentHtml) {
+      $messageEl = $('&lt;p/>').html(message.content);
+    } else {
+      $messageEl = $('&lt;p/>').text(message.content);
+    }
+
+    if (clientGuid) {
+      $messageEl.attr('data-val-client-guid', clientGuid).addClass('temp-message');
+    }
+
+    // TODO this decorator should be replaced with custom content processor.
+    if (this.opts.uiDecorator && this.opts.uiDecorator.contentLinkify) {
+      this.opts.uiDecorator.contentLinkify($messageEl);
+    } else {
+      $messageEl.html(YChat.Content.linkify($messageEl.html()));
+    }
+
+    // TODO this decorator should be replaced with custom content processor.
+    if (this.opts.uiDecorator && this.opts.uiDecorator.contentEmotify) {
+      this.opts.uiDecorator.contentEmotify($messageEl);
+    } else {
+      $messageEl.html(YChat.Content.emotify($messageEl.html()));
+    }
+
+    $lastMessage = $('div.chat-message:last', this.chatContainer.$windowInnerContent);
+    if ($lastMessage.length &&
+        parseInt($lastMessage.attr('data-val-user-from'), 10) === message.fromId) {
+      $messageEl.appendTo($('.chat-text-wrapper', $lastMessage));
+    } else {
+      $chatMessage = $('&lt;div/>')
+                      .addClass('chat-message')
+                      .attr('data-val-user-from', message.fromId);
+      $chatMessage.appendTo(this.chatContainer.$windowInnerContent);
+
+      $gravatarWrapper = $('&lt;div/>').addClass('chat-gravatar-wrapper').appendTo($chatMessage);
+      $textWrapper = $('&lt;div/>').addClass('chat-text-wrapper').appendTo($chatMessage);
+
+      $messageEl.appendTo($textWrapper);
+      messageUserFrom = this.opts.chat.usersById[message.fromId];
+
+      // TODO Again custom content processor? Maybe message processor/decorator.
+      // TODO Stuff for the view!
+      if (this.opts.uiDecorator && this.opts.uiDecorator.profilePicture) {
+        this.opts.uiDecorator.profilePicture(messageUserFrom).appendTo($gravatarWrapper);
+      } else {
+        $('&lt;img/>')
+          .addClass('profile-picture')
+          .attr('src', decodeURI(messageUserFrom.avatar))
+          .appendTo($gravatarWrapper);
+      }
+    }
+
+    // TODO This should go to the view!
+    this.chatContainer.$windowInnerContent.scrollTop(
+      this.chatContainer.$windowInnerContent[0].scrollHeight
+    );
+
+    // TODO Here event should be fired.
+    if (this.opts.uiDecorator && this.opts.uiDecorator.afterNewMessage) {
+      this.opts.uiDecorator.afterNewMessage(this.chatContainer);
+    }
+  }
+};
+
+/**
+ * Generate a uniq id for chat messages.
+ *
+ * @todo Should be renamed to something better.
+ * @todo Better truly uniq implementation!
+ * @todo Maybe this should be moved to an utility namespace.
+ */
+YChat.ChatController.prototype.generateGuidPart = function () {
+  return (((1 + Math.random()) * 0x10000) | 0).toString(16).substring(1);
+};
+
+/**
+ * Sends a new message to the chat.
+ *
+ * @param {string} messageText
+ *    The content of the message to send.
+ */
+YChat.ChatController.prototype.sendMessage = function (messageText) {
+  var _this = this,
+      clientGuid = (
+        this.generateGuidPart() +
+        this.generateGuidPart() +
+        '-' +
+        this.generateGuidPart() +
+        '-' +
+        this.generateGuidPart() +
+        '-' +
+        this.generateGuidPart() +
+        '-' +
+        this.generateGuidPart() +
+        this.generateGuidPart() +
+        this.generateGuidPart()
+      ),
+  messageToSend = {
+    fromId: this.opts.myUser.id,
+    content: messageText
+  };
+
+  this.addMessage(messageToSend, clientGuid);
+
+  // TODO Event here!
+  if (this.opts.uiDecorator && this.opts.uiDecorator.beforeSendMessage) {
+    this.opts.uiDecorator.beforeSendMessage(messageToSend, this.opts.otherUser.id);
+  }
+
+  // TODO Event!
+  this.opts.adapter.server.sendMessage(
+    this.opts.otherUser.id, messageToSend.content, clientGuid,
+    function (message) {
+    _this.addMessage({
+      fromId: _this.opts.myUser.id,
+      content: message,
+      toId: _this.opts.otherUser.id,
+      ClientGuid: clientGuid
+    }, clientGuid);
+  });
+};
+
+/**
+ * Send typing signal to the other participants in the chat.
+ *
+ * @todo Should trigger an event!
+ */
+YChat.ChatController.prototype.sendTypingSignal = function () {
+  this.opts.adapter.server.sendTypingSignal(this.opts.otherUser.id);
+};
+
+/**
+ * Adds a custom header to the chat container.
+ *
+ * @deprecated To be removed and instead of it - event!
+ * @todo Add event instead of this method
+ */
+YChat.ChatController.prototype.addHeader = function (messageHistory) {
+  var uiDecorator = this.opts.uiDecorator;
+
+  if (uiDecorator && uiDecorator.header) {
+    this.chatContainer.$windowInnerContent.append(uiDecorator.header(messageHistory));
+  }
+};
+
+/**
+ * Retrieves the state of the view of this controller - maximized/minimized.
+ */
+YChat.ChatController.prototype.getState = function () {
+  return this.chatContainer.getState();
+};
+
+/**
+ * Changes the visibility of the view of this controller.
+ *
+ * @param {boolean} value
+ *    True if the YChat.ChatContainer should be visible, false otherwise.
+ */
+YChat.ChatController.prototype.setVisible = function (value) {
+  this.chatContainer.setVisible(value);
+};
+
+/**
+ * Focuses to the view of this controller.
+ */
+YChat.ChatController.prototype.focus = function () {
+  this.chatContainer.$textBox.focus();
+};
+
+/**
+ * Shows typing signal in the view.
+ *
+ * FIXME View logic should be in the view!!!
+ */
+YChat.ChatController.prototype.showTypingSignal = function (user) {
+  var _this = this;
+
+  if (this.$typingSignal) {
+    this.$typingSignal.remove();
+  }
+
+  this.$typingSignal = $('&lt;p/>').addClass('typing-signal').text(user.name + this.opts.typingText);
+  this.chatContainer.$textBox.before(this.$typingSignal);
+
+  if (this.typingSignalTimeout) {
+    clearTimeout(this.typingSignalTimeout);
+  }
+  this.typingSignalTimeout = setTimeout(function () {
+    _this.removeTypingSignal();
+  }, 5000);
+};
+
+YChat.ChatController.prototype.removeTypingSignal = function () {
+  if (this.$typingSignal) {
+    this.$typingSignal.remove();
+  }
+  if (this.typingSignalTimeout) {
+    clearTimeout(this.typingSignalTimeout);
+  }
+};
+
+/**
+ * Updates the online status of the user at the other end of this chat.
+ *
+ * @param {boolean} userIsOnline
+ *    If the user is online.
+ *
+ * @todo Here we have another piece of logic to be moved in the view.
+ */
+YChat.ChatController.prototype.setOnlineStatus = function (userIsOnline) {
+  // TODO these css classes should be constants!
+  if (userIsOnline) {
+    this.chatContainer.$windowTitle.addClass('online');
+    this.chatContainer.$windowTitle.removeClass('offline');
+  } else {
+    this.chatContainer.$windowTitle.removeClass('online');
+    this.chatContainer.$windowTitle.addClass('offline');
+  }
+};
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Index</a></h2><h3>Classes</h3><ul><li><a href="YChat.ChatContainer.html">ChatContainer</a></li><li><a href="YChat.ChatController.html">ChatController</a></li><li><a href="YChat.Container.html">Container</a></li></ul><h3>Namespaces</h3><ul><li><a href="YChat.html">YChat</a></li><li><a href="YChat.Content.html">Content</a></li></ul>
+</nav>
+
+<br clear="both">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.2.2</a> on Tue Jan 21 2014 18:45:41 GMT+0200 (EET)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

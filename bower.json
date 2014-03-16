@@ -1,0 +1,20 @@
+{
+  "name": "ychatjs",
+  "version": "0.0.0",
+  "ignore": [
+    "**/.*",
+    "build",
+    "*.md",
+    "Gruntfile.js",
+    "package.json",
+    "bower.json"
+  ],
+  "dependencies": {
+    "jquery": ">= 1.9.0"
+  },
+  "keywords": [
+    "ychatjs",
+    "ychat",
+    "chat"
+  ]
+}

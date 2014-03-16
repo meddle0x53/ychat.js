@@ -1,0 +1,266 @@
+// YChat Window
+
+.ychat-window {
+  background-color: #FEFEFE;
+
+  border: 1px solid rgba(0, 0, 0, 0.3);
+  border-radius: 5px 5px 0px 0px;
+  -moz-border-radius: 5px 5px 0px 0px;
+  -webkit-border-radius: 5px 5px 0px 0px;
+
+  bottom: 0;
+  font-family: Arial,Helvetica;
+  font-size: 12px;
+  line-height: 14.4px;
+  position: fixed;
+  width: 220px;
+  z-index: 10000;
+
+  -webkit-box-shadow: -1px 1px 4px 0px rgba(0,0,0,0.48);
+  -moz-box-shadow: -1px 1px 4px 0px rgba(0,0,0,0.48);
+  box-shadow: -1px 1px 4px 0px rgba(0,0,0,0.48);
+
+  .temp-message {
+    color: rgb(176, 176, 176);
+  }
+}
+
+.ychat-window-main {
+  width: 200px;
+  .ychat-window-title {
+    background: none repeat scroll 0 0 #B4C476;
+    color: white;
+  }
+}
+
+.ychat-window-inner-content {
+  margin-bottom: 2px;
+  max-height: 300px;
+  overflow-y: auto;
+
+  .loading-box {
+    padding: 30px;
+    background-image: image-url("ychat/ajax-loader.gif");
+    background-repeat: no-repeat;
+    background-position: center center;
+  }
+
+  .ychat-header {
+    border-color: #5db2c9;
+    border-bottom: 1px solid #EAEAEA;
+    margin: 5px 20px;
+    text-align: center;
+
+    a {
+      color: #21F3A2;
+      overflow: hidden;
+      padding: 5px 0;
+
+    }
+  }
+}
+
+.ychat-window-content {
+  .message-warning {
+    margin: 0;
+  }
+
+  .typing-signal {
+    color: gray;
+    margin: 3px 8px;
+  }
+
+  input[type=text] {
+    -webkit-box-sizing: border-box; /* Safari/Chrome, other WebKit */
+    -moz-box-sizing: border-box; /* Firefox, other Gecko */
+    box-sizing: border-box; /* Opera/IE 8+ */
+    margin: 0;
+    border-radius: 0;
+    margin: 0;
+    height: auto;
+  }
+}
+
+
+// YChat Window Title
+.ychat-window-title {
+  background: none repeat scroll 0 0 #95B5F3;
+  border-bottom: 1px solid #D7D7D7;
+  color: #FFFFFF;
+  cursor: pointer;
+  font-weight: bold;
+  overflow: hidden;
+  padding: 6px;
+
+  .text {
+    margin-top: 1px;
+  }
+
+  .close {
+    float: right;
+    height: 16px;
+    width: 16px;
+    opacity: 0.7;
+  }
+
+  .close:hover {
+    opacity: 0.5;
+  }
+
+  .toggleState {
+    float: right;
+    height: 16px;
+    width: 16px;
+    opacity: 0.7;
+  }
+
+  .toggleState.minimize {
+    background-image: image-url("ychat/minimize.png");
+  }
+  .toggleState.maximize {
+    background-image: image-url("ychat/maximize.png");
+  }
+
+}
+
+.ychat-window-title.unread {
+  background: none repeat scroll 0 0 #EFB32E;
+}
+
+.ychat-window-title.online {
+}
+
+.ychat-window-title.offline {
+}
+
+// YChat Window Text Box
+.ychat-window-text-box-wrapper {
+  padding: 2px;
+
+  textarea.ychat-window-text-box {
+    width: 100%;
+    overflow: hidden;
+    resize: none;
+    margin: 0;
+    font-size: 12px;
+    box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    padding: 5px;
+    line-height: 1.2em;
+    display: block;
+    color: #555555;
+    vertical-align: middle;
+    background-color: #ffffff;
+    border-radius: 0;
+    border: 1px solid #cccccc;
+  }
+
+  textarea.ychat-window-text-box:focus {
+    border-color: rgba(239, 179, 46, 0.8);
+    outline: none;
+  }
+}
+
+// YChat Window Contacts List
+
+.user-list-item {
+  background-position: 2px center;
+  background-repeat: no-repeat;
+  cursor: pointer;
+  margin: 5px;
+  overflow: hidden;
+
+  .profile-status {
+    display: block;
+    float: right;
+    height: 7px;
+    margin: 10px 6px 0;
+    width: 7px;
+  }
+
+  .profile-unread {
+    display: block;
+    float: right;
+    height: 15px;
+    margin: 7px 2px 0;
+    width: 15px;
+  }
+
+  .profile-unread.has-unread {
+    background-image: image-url("ychat/has-unread.png");
+    background-repeat: no-repeat;
+  }
+
+  .profile-status.online {
+    background-image: image-url("ychat/chat-online.png");
+    background-repeat: no-repeat;
+  }
+
+  .profile-status.offline {
+    background-image: image-url("ychat/chat-offline.png");
+    background-repeat: no-repeat;
+  }
+
+  .content {
+      margin: 7px 22px 0 35px;
+  }
+
+}
+
+.user-list-item.offline {
+  background-image: image-url("ychat/chat-offline.png");
+}
+
+.user-list-item.online {
+  background-image: image-url("ychat/chat-online.png");
+}
+
+.user-list-empty {
+  background-position: 2px center;
+  background-repeat: no-repeat;
+  padding: 10px;
+}
+
+.profile-picture {
+  display: block;
+  float: left;
+  width: 25px;
+}
+
+// YChat messages
+.chat-message {
+  border-bottom: 1px solid #EAEAEA;
+  margin: 0 5px;
+  overflow: hidden;
+  padding: 5px 0;
+}
+
+.chat-message:last-child {
+  border-bottom: none;
+}
+
+.chat-message .chat-gravatar-wrapper {
+  float: left;
+  height: 30px;
+}
+
+.chat-message .chat-text-wrapper {
+  line-height: 1.2em;
+  margin-left: 40px;
+}
+
+.chat-message p {
+  margin: 0;
+}
+
+// YChat default emoticons
+
+.yemoticon {
+  display: inline-block;
+  width: 16px;
+  height: 16px;
+  vertical-align: top;
+  margin-bottom: 1px;
+  margin-top: 1px;
+}

@@ -1,0 +1,30 @@
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>YChat Tester</title>
+    <link rel="stylesheet" type="text/css" href="css/ychat.css" />
+    <script type="text/javascript" src="js/lib/jquery/jquery.js"></script>
+    <script type="text/javascript" src="js/jquery.ychat.min.js"></script>
+    <script type="text/javascript" src="js/ychat_local_adapter.js"></script>
+    <script type="text/javascript">
+      $(document).ready(function () {
+        $('body').ychat({
+          user: {
+            id: 1,
+            name: 'Tester',
+            avatar: 'images/dummy/smiley.png'
+          },
+          adapter: window.YChat.LocalAdapter
+        });
+      });
+    </script>
+  </head>
+  <body>
+    <div class='test-container' style='width: 100%; height: 300px;'>
+    </div>
+    <div class='test-container' style='width: 100%; height: 300px;'>
+    </div>
+    <div class='test-container' style='width: 100%; height: 300px;'>
+    </div>
+  </body>
+</html>

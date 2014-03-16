@@ -1,0 +1,49 @@
+[4mRunning "todo:src" (todo) task[24m
+
+src/js/ychat_container.js
+
+	line 35   TODO  // TODO $window should be renamed to $el!
+	line 67   TODO  // TODO Refactor the list of containers!
+	line 77   TODO  // TODO Trigger as event!
+	line 103  TODO  // TODO This should be an event!
+	line 121  TODO  // TODO The containers list should be a variable to the namespace!
+	line 129  TODO  // TODO trigger as event!
+	line 133  TODO  // TODO remove this!
+
+src/js/ychat_chat_controller.js
+
+	line 7    TODO  * @todo Lint!!!
+	line 28   TODO  * @todo Document the events fired from the init method when implemented.
+	line 46   TODO  // TODO This callback can be instance method.
+	line 65   TODO  // TODO This callbacks can be instance method.
+	line 82   TODO  // TODO Remove this!
+	line 85   TODO  // TODO This callback can be instance method.
+	line 131  TODO  * @todo This clientGuid has bad name and see its generation process!
+	line 132  TODO  * @todo Document the message object!
+	line 139  TODO  // TODO Remove uiDecorator related stuff!
+	line 150  TODO  // TODO message.ClientGuid should be renamed to something better!
+	line 168  TODO  // TODO this decorator should be replaced with custom content processor.
+	line 175  TODO  // TODO this decorator should be replaced with custom content processor.
+	line 195  TODO  // TODO Again custom content processor? Maybe message processor/decorator.
+	line 205  TODO  // TODO Here event should be fired.
+	line 215  TODO  * @todo Should be renamed to something better.
+	line 216  TODO  * @todo Better truly uniq implementation!
+	line 217  TODO  * @todo Maybe this should be moved to an utility namespace.
+	line 246  TODO  // TODO Event here!
+	line 251  TODO  // TODO Event!
+	line 266  TODO  // TODO UI extentions should be added on create event of the controller or the c…
+	line 315  TODO  // TODO these css classes should be constants!
+
+src/js/ychat_constants.js
+
+	line 46  TODO  * @todo All the on* methods should be removed and instead of them we should us e…
+	line 47  TODO  * @todo The uiDecorator is not needed if there are events!
+	line 82  TODO  * @todo All the on* methods should be removed and instead of them we should us e…
+	line 83  TODO  * @todo The uiDecorator is not needed if there are events!
+	line 84  TODO  * @todo The adapter should be replaced with events.
+
+test/unit/ychat/container.spec.js
+
+	line 3  TODO  // TODO Test events when added!
+
+[32mDone, without errors.[39m
